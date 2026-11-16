@@ -1,0 +1,238 @@
+{
+  "info": {
+    "name": "Catalog Validator - Assignment 3",
+    "description": "1 valid request and 4 distinct 422 validation error cases. Start the server (node server.js) first.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. VALID item (201)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"Returns created item\", function () { const j = pm.response.json(); pm.expect(j.data).to.have.property(\"id\"); pm.expect(j.data.sku).to.eql(\"ABC-1234\"); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sku\": \"ABC-1234\",\n  \"price\": 49.99,\n  \"tags\": [\n    \"electronics\",\n    \"sale\"\n  ],\n  \"vendor\": {\n    \"name\": \"TechCorp\",\n    \"email\": \"sales@techcorp.com\",\n    \"country\": \"US\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/catalog/items",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "catalog",
+            "items"
+          ]
+        }
+      }
+    },
+    {
+      "name": "2. INVALID SKU format (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 422\", function () { pm.response.to.have.status(422); });",
+              "pm.test(\"Error is reported on field 'sku'\", function () { const d = pm.response.json().details; pm.expect(d.map(e => e.field)).to.include(\"sku\"); });",
+              "pm.test(\"Message mentions 'SKU must match'\", function () { const d = pm.response.json().details.find(e => e.field === \"sku\"); pm.expect(d.message).to.include(\"SKU must match\"); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sku\": \"abc_12\",\n  \"price\": 49.99,\n  \"tags\": [\n    \"electronics\",\n    \"sale\"\n  ],\n  \"vendor\": {\n    \"name\": \"TechCorp\",\n    \"email\": \"sales@techcorp.com\",\n    \"country\": \"US\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/catalog/items",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "catalog",
+            "items"
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. INVALID price <= 0 (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 422\", function () { pm.response.to.have.status(422); });",
+              "pm.test(\"Error is reported on field 'price'\", function () { const d = pm.response.json().details; pm.expect(d.map(e => e.field)).to.include(\"price\"); });",
+              "pm.test(\"Message mentions 'greater than 0'\", function () { const d = pm.response.json().details.find(e => e.field === \"price\"); pm.expect(d.message).to.include(\"greater than 0\"); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sku\": \"ABC-1234\",\n  \"price\": 0,\n  \"tags\": [\n    \"electronics\",\n    \"sale\"\n  ],\n  \"vendor\": {\n    \"name\": \"TechCorp\",\n    \"email\": \"sales@techcorp.com\",\n    \"country\": \"US\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/catalog/items",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "catalog",
+            "items"
+          ]
+        }
+      }
+    },
+    {
+      "name": "4. DUPLICATE tags (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 422\", function () { pm.response.to.have.status(422); });",
+              "pm.test(\"Error is reported on field 'tags'\", function () { const d = pm.response.json().details; pm.expect(d.map(e => e.field)).to.include(\"tags\"); });",
+              "pm.test(\"Message mentions 'unique'\", function () { const d = pm.response.json().details.find(e => e.field === \"tags\"); pm.expect(d.message).to.include(\"unique\"); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sku\": \"ABC-1234\",\n  \"price\": 49.99,\n  \"tags\": [\n    \"sale\",\n    \"Sale\"\n  ],\n  \"vendor\": {\n    \"name\": \"TechCorp\",\n    \"email\": \"sales@techcorp.com\",\n    \"country\": \"US\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/catalog/items",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "catalog",
+            "items"
+          ]
+        }
+      }
+    },
+    {
+      "name": "5. INVALID vendor details (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 422\", function () { pm.response.to.have.status(422); });",
+              "pm.test(\"Vendor sub-fields are reported\", function () { const f = pm.response.json().details.map(e => e.field); pm.expect(f).to.include.members([\"vendor.name\",\"vendor.email\",\"vendor.country\"]); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sku\": \"ABC-1234\",\n  \"price\": 49.99,\n  \"tags\": [\n    \"electronics\",\n    \"sale\"\n  ],\n  \"vendor\": {\n    \"name\": \"\",\n    \"email\": \"not-an-email\",\n    \"country\": \"usa\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/catalog/items",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "catalog",
+            "items"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ]
+}

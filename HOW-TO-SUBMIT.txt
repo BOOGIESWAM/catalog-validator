@@ -1,0 +1,26 @@
+HOW TO SUBMIT - NO CODING KNOWLEDGE NEEDED
+===========================================
+You need 2 things for Google Classroom:
+  (A) a GitHub link to this project
+  (B) the file  Catalog-Validator.postman_collection.json
+
+STEP 1 - Put the project on GitHub (website only)
+  1. Go to github.com and log in.
+  2. Click "+" (top right) > "New repository".
+  3. Name it:  catalog-validator  -> "Public" -> "Create repository".
+  4. Click the link "uploading an existing file".
+  5. Unzip catalog-validator.zip, select ALL files inside, drag them into the page.
+  6. Click "Commit changes".
+  7. Copy the page address. THAT IS YOUR GITHUB LINK.
+
+STEP 2 - Google Classroom
+  1. Assignment > "Add or create" > "Link" > paste the GitHub link.
+  2. "Add or create" > "File" > Catalog-Validator.postman_collection.json
+  3. "Turn in".
+
+OPTIONAL - see it working
+  1. Install Node.js from nodejs.org.
+  2. Windows: double-click start-windows.bat | Mac: double-click start-mac.command
+  3. Postman: Import the collection file > click it > Run. All tests should be green.
+
+Do NOT edit any files. They are tested and working.

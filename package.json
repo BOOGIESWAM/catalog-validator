@@ -1,0 +1,8 @@
+{
+  "name": "catalog-validator",
+  "version": "1.0.0",
+  "description": "E-Commerce Catalog Validator Service - complex payload validation with 422 errors",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "license": "MIT"
+}
